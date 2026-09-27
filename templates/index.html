@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Mark Predictor | Oxstandhard University</title>
+
+    <style>
+
+        /* ================================
+           GLOBAL
+        ================================= */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            min-height: 100vh;
+
+            background:
+                radial-gradient(circle at top left, rgba(76, 110, 245, 0.25), transparent 35%),
+                radial-gradient(circle at bottom right, rgba(0, 200, 255, 0.18), transparent 35%),
+                linear-gradient(135deg, #07152f, #102e5e 50%, #07152f);
+
+            color: white;
+            overflow-x: hidden;
+        }
+
+
+        /* ================================
+           BACKGROUND DECORATIONS
+        ================================= */
+
+        .background-circle {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(2px);
+            opacity: 0.15;
+            z-index: 0;
+        }
+
+        .circle-one {
+            width: 300px;
+            height: 300px;
+            background: #4f8cff;
+            top: 50px;
+            left: -120px;
+        }
+
+        .circle-two {
+            width: 250px;
+            height: 250px;
+            background: #00d4ff;
+            bottom: 30px;
+            right: -100px;
+        }
+
+
+        /* ================================
+           MAIN CONTAINER
+        ================================= */
+
+        .container {
+            width: 92%;
+            max-width: 1200px;
+            margin: auto;
+            position: relative;
+            z-index: 1;
+        }
+
+
+        /* ================================
+           HEADER / BANNER
+        ================================= */
+
+        .banner-wrapper {
+            margin-top: 25px;
+            border-radius: 22px;
+            overflow: hidden;
+
+            box-shadow:
+                0 20px 50px rgba(0, 0, 0, 0.35);
+
+            border: 1px solid rgba(255, 255, 255, 0.15);
+
+            background: #102f61;
+        }
+
+        .banner-wrapper img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+
+        /* ================================
+           HERO SECTION
+        ================================= */
+
+        .hero {
+            text-align: center;
+            padding: 35px 20px 20px;
+        }
+
+        .hero h1 {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 12px;
+
+            background: linear-gradient(
+                90deg,
+                #ffffff,
+                #7dd3fc,
+                #ffffff
+            );
+
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            color: #cbd5e1;
+            font-size: 17px;
+            max-width: 700px;
+            margin: auto;
+            line-height: 1.6;
+        }
+
+
+        /* ================================
+           MAIN CARD
+        ================================= */
+
+        .prediction-card {
+            max-width: 650px;
+            margin: 30px auto 50px;
+
+            padding: 40px;
+
+            background: rgba(255, 255, 255, 0.09);
+
+            border: 1px solid rgba(255, 255, 255, 0.16);
+
+            border-radius: 25px;
+
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+
+            box-shadow:
+                0 25px 60px rgba(0, 0, 0, 0.35);
+        }
+
+
+        /* ================================
+           CARD HEADER
+        ================================= */
+
+        .card-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .card-icon {
+            width: 70px;
+            height: 70px;
+
+            margin: auto auto 15px;
+
+            border-radius: 20px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 32px;
+
+            background: linear-gradient(
+                135deg,
+                #2563eb,
+                #06b6d4
+            );
+
+            box-shadow:
+                0 10px 30px rgba(37, 99, 235, 0.35);
+        }
+
+        .card-header h2 {
+            font-size: 27px;
+            margin-bottom: 8px;
+        }
+
+        .card-header p {
+            color: #cbd5e1;
+            font-size: 14px;
+        }
+
+
+        /* ================================
+           FORM
+        ================================= */
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+
+            font-size: 15px;
+            font-weight: 600;
+
+            color: #e2e8f0;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 17px;
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            font-size: 20px;
+        }
+
+        input[type="number"] {
+            width: 100%;
+
+            padding: 17px 50px 17px 50px;
+
+            border-radius: 14px;
+
+            border: 1px solid rgba(255, 255, 255, 0.2);
+
+            background: rgba(255, 255, 255, 0.08);
+
+            color: white;
+
+            font-size: 17px;
+
+            outline: none;
+
+            transition: 0.3s;
+        }
+
+        input[type="number"]::placeholder {
+            color: #94a3b8;
+        }
+
+        input[type="number"]:focus {
+            border-color: #38bdf8;
+
+            background: rgba(255, 255, 255, 0.12);
+
+            box-shadow:
+                0 0 0 4px rgba(56, 189, 248, 0.12);
+        }
+
+
+        /* Remove number arrows */
+
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            opacity: 1;
+        }
+
+
+        /* ================================
+           RANGE INFO
+        ================================= */
+
+        .input-info {
+            display: flex;
+            justify-content: space-between;
+
+            margin-top: 8px;
+
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+
+        /* ================================
+           BUTTON
+        ================================= */
+
+        .predict-button {
+            width: 100%;
+
+            padding: 17px;
+
+            border: none;
+            border-radius: 14px;
+
+            background: linear-gradient(
+                135deg,
+                #2563eb,
+                #06b6d4
+            );
+
+            color: white;
+
+            font-size: 17px;
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition: all 0.3s ease;
+
+            box-shadow:
+                0 10px 25px rgba(37, 99, 235, 0.3);
+        }
+
+        .predict-button:hover {
+            transform: translateY(-3px);
+
+            box-shadow:
+                0 15px 35px rgba(37, 99, 235, 0.45);
+        }
+
+        .predict-button:active {
+            transform: translateY(0);
+        }
+
+
+        /* ================================
+           LOADING STATE
+        ================================= */
+
+        .predict-button.loading {
+            pointer-events: none;
+            opacity: 0.8;
+        }
+
+
+        /* ================================
+           RESULT
+        ================================= */
+
+        .result-container {
+            margin-top: 30px;
+        }
+
+        .result-card {
+            padding: 25px;
+
+            border-radius: 18px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(34, 197, 94, 0.15),
+                    rgba(14, 165, 233, 0.12)
+                );
+
+            border: 1px solid rgba(74, 222, 128, 0.3);
+
+            text-align: center;
+
+            animation: resultAppear 0.6s ease;
+        }
+
+        .result-icon {
+            font-size: 35px;
+            margin-bottom: 10px;
+        }
+
+        .result-title {
+            font-size: 14px;
+            color: #94a3b8;
+
+            text-transform: uppercase;
+
+            letter-spacing: 1px;
+
+            margin-bottom: 8px;
+        }
+
+        .result-text {
+            font-size: 21px;
+
+            line-height: 1.5;
+
+            color: #f8fafc;
+
+            font-weight: 600;
+        }
+
+
+        @keyframes resultAppear {
+
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+        }
+
+
+        /* ================================
+           FEATURES
+        ================================= */
+
+        .features {
+            max-width: 900px;
+            margin: 0 auto 60px;
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 20px;
+        }
+
+        .feature-card {
+            padding: 25px;
+
+            text-align: center;
+
+            border-radius: 18px;
+
+            background: rgba(255, 255, 255, 0.06);
+
+            border:
+                1px solid rgba(255, 255, 255, 0.1);
+
+            transition: 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .feature-icon {
+            font-size: 30px;
+            margin-bottom: 12px;
+        }
+
+        .feature-card h3 {
+            font-size: 17px;
+            margin-bottom: 8px;
+        }
+
+        .feature-card p {
+            font-size: 13px;
+            line-height: 1.5;
+            color: #94a3b8;
+        }
+
+
+        /* ================================
+           FOOTER
+        ================================= */
+
+        footer {
+            text-align: center;
+
+            padding: 25px;
+
+            border-top:
+                1px solid rgba(255, 255, 255, 0.08);
+
+            color: #94a3b8;
+
+            font-size: 13px;
+        }
+
+
+        /* ================================
+           RESPONSIVE
+        ================================= */
+
+        @media (max-width: 768px) {
+
+            .hero h1 {
+                font-size: 31px;
+            }
+
+            .hero p {
+                font-size: 15px;
+            }
+
+            .prediction-card {
+                padding: 25px;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+
+            .banner-wrapper {
+                margin-top: 10px;
+                border-radius: 15px;
+            }
+
+        }
+
+
+        @media (max-width: 480px) {
+
+            .container {
+                width: 94%;
+            }
+
+            .prediction-card {
+                padding: 20px;
+            }
+
+            .hero {
+                padding-top: 25px;
+            }
+
+            .hero h1 {
+                font-size: 27px;
+            }
+
+            .card-header h2 {
+                font-size: 23px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+    <!-- Decorative background -->
+    <div class="background-circle circle-one"></div>
+    <div class="background-circle circle-two"></div>
+
+
+    <div class="container">
+
+        <!-- ======================================
+             COLLEGE BANNER
+        ======================================= -->
+
+        <div class="banner-wrapper">
+
+            <img
+                src="{{ url_for('static', filename='images/college_banner2.png') }}"
+                alt="Oxstandhard University"
+            >
+
+        </div>
+
+
+        <!-- ======================================
+             HERO
+        ======================================= -->
+
+        <section class="hero">
+
+            <h1>Student Mark Predictor</h1>
+
+            <p>
+                Predict your expected academic performance
+                using our Machine Learning powered prediction system.
+            </p>
+
+        </section>
+
+
+        <!-- ======================================
+             PREDICTION CARD
+        ======================================= -->
+
+        <div class="prediction-card">
+
+            <div class="card-header">
+
+                <div class="card-icon">
+                    🎓
+                </div>
+
+                <h2>Predict Your Marks</h2>
+
+                <p>
+                    Enter your average daily study hours
+                    to generate a predicted score.
+                </p>
+
+            </div>
+
+
+            <!-- IMPORTANT:
+                 Same Flask endpoint and same input name.
+                 Backend does NOT need to change.
+            -->
+
+            <form
+                action="{{ url_for('predict') }}"
+                method="post"
+                id="predictionForm"
+            >
+
+                <div class="form-group">
+
+                    <label for="study_hours">
+                        📚 Daily Study Hours
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <span class="input-icon">
+                            ⏱️
+                        </span>
+
+                        <input
+                            type="number"
+                            id="study_hours"
+                            name="study_hours"
+                            placeholder="Enter study hours"
+                            min="0"
+                            max="24"
+                            step="0.1"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="input-info">
+
+                        <span>Minimum: 0 hours</span>
+
+                        <span>Maximum: 24 hours</span>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="predict-button"
+                    id="predictButton"
+                >
+
+                    <span id="buttonText">
+                        🔮 Predict My Marks
+                    </span>
+
+                </button>
+
+            </form>
+
+
+            <!-- ======================================
+                 PREDICTION RESULT
+            ======================================= -->
+
+            {% if prediction_text %}
+
+            <div class="result-container">
+
+                <div class="result-card">
+
+                    <div class="result-icon">
+                        🎯
+                    </div>
+
+                    <div class="result-title">
+                        Prediction Result
+                    </div>
+
+                    <div class="result-text">
+                        {{ prediction_text }}
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- ======================================
+             FEATURES
+        ======================================= -->
+
+        <div class="features">
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    🤖
+                </div>
+
+                <h3>Machine Learning</h3>
+
+                <p>
+                    Predictions are generated using
+                    a trained Machine Learning model.
+                </p>
+
+            </div>
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    ⚡
+                </div>
+
+                <h3>Instant Prediction</h3>
+
+                <p>
+                    Enter your study hours and
+                    receive your prediction instantly.
+                </p>
+
+            </div>
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    📊
+                </div>
+
+                <h3>Academic Insights</h3>
+
+                <p>
+                    Understand how your study time
+                    relates to expected performance.
+                </p>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- ======================================
+         FOOTER
+    ======================================= -->
+
+    <footer>
+
+        <p>
+            © 2026 Oxstandhard University
+            | Student Mark Predictor
+        </p>
+
+        <p style="margin-top: 6px;">
+            Machine Learning Academic Project
+        </p>
+
+    </footer>
+
+
+    <!-- ======================================
+         JAVASCRIPT
+    ======================================= -->
+
+    <script>
+
+        const form = document.getElementById("predictionForm");
+
+        const button = document.getElementById("predictButton");
+
+        const buttonText = document.getElementById("buttonText");
+
+        const studyHours = document.getElementById("study_hours");
+
+
+        form.addEventListener("submit", function(event) {
+
+            const hours = parseFloat(studyHours.value);
+
+
+            /* Frontend validation */
+
+            if (hours < 0 || hours > 24) {
+
+                event.preventDefault();
+
+                alert(
+                    "Please enter study hours between 0 and 24."
+                );
+
+                return;
+
+            }
+
+
+            /* Loading state */
+
+            button.classList.add("loading");
+
+            buttonText.innerHTML =
+                "⏳ Calculating Prediction...";
+
+        });
+
+
+        /* Enter key / input feedback */
+
+        studyHours.addEventListener("input", function() {
+
+            const value = parseFloat(this.value);
+
+            if (value > 24) {
+
+                this.value = 24;
+
+            }
+
+            if (value < 0) {
+
+                this.value = 0;
+
+            }
+
+        });
+
+    </script>
+
+</body>
+
+</html>

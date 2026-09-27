@@ -1,0 +1,28 @@
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# Jupyter temporary files
+.ipynb_checkpoints/
+
+# VS Code settings
+.vscode/
+
+# Generated prediction data
+smp_data_from_app.csv
+
+# Unnecessary practice file
+flask practise.py
+
+# OS temporary files
+.DS_Store
+Thumbs.db
+
+# Python logs
+*.log
