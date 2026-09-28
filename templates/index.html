@@ -1,847 +1,3357 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Student Mark Predictor | Oxstandhard University</title>
-
-    <style>
+<meta charset="UTF-8">
 
-        /* ================================
-           GLOBAL
-        ================================= */
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: "Segoe UI", Arial, sans-serif;
-            min-height: 100vh;
-
-            background:
-                radial-gradient(circle at top left, rgba(76, 110, 245, 0.25), transparent 35%),
-                radial-gradient(circle at bottom right, rgba(0, 200, 255, 0.18), transparent 35%),
-                linear-gradient(135deg, #07152f, #102e5e 50%, #07152f);
-
-            color: white;
-            overflow-x: hidden;
-        }
-
-
-        /* ================================
-           BACKGROUND DECORATIONS
-        ================================= */
-
-        .background-circle {
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(2px);
-            opacity: 0.15;
-            z-index: 0;
-        }
-
-        .circle-one {
-            width: 300px;
-            height: 300px;
-            background: #4f8cff;
-            top: 50px;
-            left: -120px;
-        }
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
 
-        .circle-two {
-            width: 250px;
-            height: 250px;
-            background: #00d4ff;
-            bottom: 30px;
-            right: -100px;
-        }
+<title>
+    MarkPredict | Student AI Analytics
+</title>
 
 
-        /* ================================
-           MAIN CONTAINER
-        ================================= */
+<style>
 
-        .container {
-            width: 92%;
-            max-width: 1200px;
-            margin: auto;
-            position: relative;
-            z-index: 1;
-        }
+/* ============================================================
+   GLOBAL
+============================================================ */
 
+* {
 
-        /* ================================
-           HEADER / BANNER
-        ================================= */
+    margin: 0;
 
-        .banner-wrapper {
-            margin-top: 25px;
-            border-radius: 22px;
-            overflow: hidden;
+    padding: 0;
 
-            box-shadow:
-                0 20px 50px rgba(0, 0, 0, 0.35);
+    box-sizing: border-box;
+}
 
-            border: 1px solid rgba(255, 255, 255, 0.15);
 
-            background: #102f61;
-        }
+:root {
 
-        .banner-wrapper img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
+    --primary: #315bea;
 
+    --primary-dark: #2447c8;
 
-        /* ================================
-           HERO SECTION
-        ================================= */
+    --secondary: #6047e8;
 
-        .hero {
-            text-align: center;
-            padding: 35px 20px 20px;
-        }
+    --bg: #f4f7fb;
 
-        .hero h1 {
-            font-size: 42px;
-            font-weight: 700;
-            margin-bottom: 12px;
+    --white: #ffffff;
 
-            background: linear-gradient(
-                90deg,
-                #ffffff,
-                #7dd3fc,
-                #ffffff
-            );
+    --dark: #111827;
 
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+    --dark-2: #172033;
 
-        .hero p {
-            color: #cbd5e1;
-            font-size: 17px;
-            max-width: 700px;
-            margin: auto;
-            line-height: 1.6;
-        }
+    --text: #172033;
 
+    --muted: #718096;
 
-        /* ================================
-           MAIN CARD
-        ================================= */
+    --border: #e5eaf2;
 
-        .prediction-card {
-            max-width: 650px;
-            margin: 30px auto 50px;
+    --success: #16a34a;
 
-            padding: 40px;
+    --warning: #f59e0b;
 
-            background: rgba(255, 255, 255, 0.09);
+    --danger: #ef4444;
 
-            border: 1px solid rgba(255, 255, 255, 0.16);
+    --shadow:
+        0 10px 35px
+        rgba(15, 23, 42, 0.07);
+}
 
-            border-radius: 25px;
 
-            backdrop-filter: blur(18px);
-            -webkit-backdrop-filter: blur(18px);
+body {
 
-            box-shadow:
-                0 25px 60px rgba(0, 0, 0, 0.35);
-        }
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
 
+    background: var(--bg);
 
-        /* ================================
-           CARD HEADER
-        ================================= */
+    color: var(--text);
 
-        .card-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
+    min-height: 100vh;
+}
 
-        .card-icon {
-            width: 70px;
-            height: 70px;
 
-            margin: auto auto 15px;
+/* ============================================================
+   SIDEBAR
+============================================================ */
 
-            border-radius: 20px;
+.sidebar {
 
-            display: flex;
-            align-items: center;
-            justify-content: center;
+    position: fixed;
 
-            font-size: 32px;
+    top: 0;
 
-            background: linear-gradient(
-                135deg,
-                #2563eb,
-                #06b6d4
-            );
+    left: 0;
 
-            box-shadow:
-                0 10px 30px rgba(37, 99, 235, 0.35);
-        }
+    bottom: 0;
 
-        .card-header h2 {
-            font-size: 27px;
-            margin-bottom: 8px;
-        }
+    width: 260px;
 
-        .card-header p {
-            color: #cbd5e1;
-            font-size: 14px;
-        }
+    background:
+        linear-gradient(
+            180deg,
+            #111827,
+            #0b1220
+        );
 
+    color: white;
 
-        /* ================================
-           FORM
-        ================================= */
+    padding: 22px 15px;
 
-        .form-group {
-            margin-bottom: 25px;
-        }
+    z-index: 1000;
+}
 
-        .form-group label {
-            display: block;
-            margin-bottom: 10px;
 
-            font-size: 15px;
-            font-weight: 600;
+.brand {
 
-            color: #e2e8f0;
-        }
+    display: flex;
 
-        .input-wrapper {
-            position: relative;
-        }
+    align-items: center;
 
-        .input-icon {
-            position: absolute;
-            left: 17px;
-            top: 50%;
+    gap: 12px;
 
-            transform: translateY(-50%);
+    padding:
+        5px 10px 28px;
+}
 
-            font-size: 20px;
-        }
 
-        input[type="number"] {
-            width: 100%;
+.brand-logo {
 
-            padding: 17px 50px 17px 50px;
+    width: 45px;
 
-            border-radius: 14px;
+    height: 45px;
 
-            border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 13px;
 
-            background: rgba(255, 255, 255, 0.08);
+    display: flex;
 
-            color: white;
+    align-items: center;
 
-            font-size: 17px;
+    justify-content: center;
 
-            outline: none;
+    background:
+        linear-gradient(
+            135deg,
+            #315bea,
+            #6047e8
+        );
 
-            transition: 0.3s;
-        }
+    font-weight: 800;
 
-        input[type="number"]::placeholder {
-            color: #94a3b8;
-        }
+    font-size: 18px;
 
-        input[type="number"]:focus {
-            border-color: #38bdf8;
+    box-shadow:
+        0 8px 25px
+        rgba(49,91,234,.3);
+}
 
-            background: rgba(255, 255, 255, 0.12);
 
-            box-shadow:
-                0 0 0 4px rgba(56, 189, 248, 0.12);
-        }
+.brand-title {
 
+    font-weight: 800;
 
-        /* Remove number arrows */
+    font-size: 18px;
+}
 
-        input[type="number"]::-webkit-inner-spin-button,
-        input[type="number"]::-webkit-outer-spin-button {
-            opacity: 1;
-        }
 
+.brand-subtitle {
 
-        /* ================================
-           RANGE INFO
-        ================================= */
+    color: #94a3b8;
 
-        .input-info {
-            display: flex;
-            justify-content: space-between;
+    font-size: 10px;
 
-            margin-top: 8px;
+    margin-top: 3px;
+}
 
-            font-size: 12px;
-            color: #94a3b8;
-        }
 
+.section-title {
 
-        /* ================================
-           BUTTON
-        ================================= */
+    color: #64748b;
 
-        .predict-button {
-            width: 100%;
+    font-size: 10px;
 
-            padding: 17px;
+    font-weight: 750;
 
-            border: none;
-            border-radius: 14px;
+    letter-spacing: 1.5px;
 
-            background: linear-gradient(
-                135deg,
-                #2563eb,
-                #06b6d4
-            );
+    padding: 10px;
+}
 
-            color: white;
 
-            font-size: 17px;
-            font-weight: 700;
+.nav {
 
-            cursor: pointer;
+    display: flex;
 
-            transition: all 0.3s ease;
+    flex-direction: column;
 
-            box-shadow:
-                0 10px 25px rgba(37, 99, 235, 0.3);
-        }
+    gap: 5px;
+}
 
-        .predict-button:hover {
-            transform: translateY(-3px);
 
-            box-shadow:
-                0 15px 35px rgba(37, 99, 235, 0.45);
-        }
+.nav-item {
 
-        .predict-button:active {
-            transform: translateY(0);
-        }
+    display: flex;
 
+    align-items: center;
 
-        /* ================================
-           LOADING STATE
-        ================================= */
+    gap: 13px;
 
-        .predict-button.loading {
-            pointer-events: none;
-            opacity: 0.8;
-        }
+    padding:
+        12px 13px;
 
+    border-radius: 10px;
 
-        /* ================================
-           RESULT
-        ================================= */
+    color: #cbd5e1;
 
-        .result-container {
-            margin-top: 30px;
-        }
+    font-size: 13px;
 
-        .result-card {
-            padding: 25px;
+    cursor: pointer;
 
-            border-radius: 18px;
+    transition: .2s;
+}
 
-            background:
-                linear-gradient(
-                    135deg,
-                    rgba(34, 197, 94, 0.15),
-                    rgba(14, 165, 233, 0.12)
-                );
 
-            border: 1px solid rgba(74, 222, 128, 0.3);
+.nav-item:hover {
 
-            text-align: center;
+    color: white;
 
-            animation: resultAppear 0.6s ease;
-        }
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            .07
+        );
+}
 
-        .result-icon {
-            font-size: 35px;
-            margin-bottom: 10px;
-        }
 
-        .result-title {
-            font-size: 14px;
-            color: #94a3b8;
+.nav-item.active {
 
-            text-transform: uppercase;
+    color: white;
 
-            letter-spacing: 1px;
+    background:
+        linear-gradient(
+            90deg,
+            #315bea,
+            #5048e7
+        );
 
-            margin-bottom: 8px;
-        }
+    box-shadow:
+        0 8px 20px
+        rgba(49,91,234,.25);
+}
 
-        .result-text {
-            font-size: 21px;
 
-            line-height: 1.5;
+.nav-icon {
 
-            color: #f8fafc;
+    width: 22px;
 
-            font-weight: 600;
-        }
+    text-align: center;
 
+    font-size: 16px;
+}
 
-        @keyframes resultAppear {
 
-            from {
-                opacity: 0;
-                transform: translateY(15px);
-            }
+.sidebar-status {
 
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+    position: absolute;
 
-        }
+    left: 15px;
 
+    right: 15px;
 
-        /* ================================
-           FEATURES
-        ================================= */
+    bottom: 20px;
 
-        .features {
-            max-width: 900px;
-            margin: 0 auto 60px;
+    background: #172033;
 
-            display: grid;
+    border:
+        1px solid #26334b;
 
-            grid-template-columns:
-                repeat(3, 1fr);
+    border-radius: 12px;
 
-            gap: 20px;
-        }
+    padding: 15px;
+}
 
-        .feature-card {
-            padding: 25px;
 
-            text-align: center;
+.status-title {
 
-            border-radius: 18px;
+    font-size: 12px;
 
-            background: rgba(255, 255, 255, 0.06);
+    font-weight: 700;
+}
 
-            border:
-                1px solid rgba(255, 255, 255, 0.1);
 
-            transition: 0.3s;
-        }
+.status-text {
 
-        .feature-card:hover {
-            transform: translateY(-5px);
+    color: #94a3b8;
 
-            background: rgba(255, 255, 255, 0.1);
-        }
+    font-size: 10px;
 
-        .feature-icon {
-            font-size: 30px;
-            margin-bottom: 12px;
-        }
+    line-height: 1.5;
 
-        .feature-card h3 {
-            font-size: 17px;
-            margin-bottom: 8px;
-        }
+    margin-top: 6px;
+}
 
-        .feature-card p {
-            font-size: 13px;
-            line-height: 1.5;
-            color: #94a3b8;
-        }
 
+.online {
 
-        /* ================================
-           FOOTER
-        ================================= */
+    display: inline-block;
 
-        footer {
-            text-align: center;
+    width: 8px;
 
-            padding: 25px;
+    height: 8px;
 
-            border-top:
-                1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 50%;
 
-            color: #94a3b8;
+    background: #22c55e;
 
-            font-size: 13px;
-        }
+    box-shadow:
+        0 0 9px #22c55e;
 
+    margin-right: 7px;
+}
 
-        /* ================================
-           RESPONSIVE
-        ================================= */
 
-        @media (max-width: 768px) {
+/* ============================================================
+   MAIN
+============================================================ */
 
-            .hero h1 {
-                font-size: 31px;
-            }
+.main {
 
-            .hero p {
-                font-size: 15px;
-            }
+    margin-left: 260px;
 
-            .prediction-card {
-                padding: 25px;
-            }
+    min-height: 100vh;
+}
 
-            .features {
-                grid-template-columns: 1fr;
-            }
 
-            .banner-wrapper {
-                margin-top: 10px;
-                border-radius: 15px;
-            }
+.topbar {
 
-        }
+    height: 72px;
 
+    background: white;
 
-        @media (max-width: 480px) {
+    border-bottom:
+        1px solid var(--border);
 
-            .container {
-                width: 94%;
-            }
+    display: flex;
 
-            .prediction-card {
-                padding: 20px;
-            }
+    align-items: center;
 
-            .hero {
-                padding-top: 25px;
-            }
+    justify-content: space-between;
 
-            .hero h1 {
-                font-size: 27px;
-            }
+    padding:
+        0 32px;
 
-            .card-header h2 {
-                font-size: 23px;
-            }
+    position: sticky;
 
-        }
+    top: 0;
 
-    </style>
+    z-index: 100;
+}
+
+
+.breadcrumb {
+
+    color: var(--muted);
+
+    font-size: 13px;
+}
+
+
+.breadcrumb strong {
+
+    color: var(--text);
+}
+
+
+.top-right {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+}
+
+
+.system-status {
+
+    background: #ecfdf3;
+
+    color: #15803d;
+
+    padding:
+        8px 13px;
+
+    border-radius: 30px;
+
+    font-size: 11px;
+
+    font-weight: 700;
+}
+
+
+.avatar {
+
+    width: 37px;
+
+    height: 37px;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: #e7edff;
+
+    color: var(--primary);
+
+    font-weight: 800;
+
+    font-size: 12px;
+}
+
+
+.content {
+
+    padding: 30px;
+}
+
+
+/* ============================================================
+   PAGES
+============================================================ */
+
+.page {
+
+    display: none;
+}
+
+
+.page.active {
+
+    display: block;
+
+    animation:
+        fadeIn .25s ease;
+}
+
+
+@keyframes fadeIn {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(5px);
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0);
+    }
+}
+
+
+.page-header {
+
+    margin-bottom: 24px;
+}
+
+
+.page-header h1 {
+
+    font-size: 28px;
+
+    letter-spacing: -.7px;
+}
+
+
+.page-header p {
+
+    color: var(--muted);
+
+    margin-top: 6px;
+
+    font-size: 13px;
+}
+
+
+/* ============================================================
+   STATISTICS
+============================================================ */
+
+.stats {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4,1fr);
+
+    gap: 16px;
+
+    margin-bottom: 20px;
+}
+
+
+.stat-card {
+
+    background: white;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 14px;
+
+    padding: 19px;
+
+    box-shadow: var(--shadow);
+}
+
+
+.stat-label {
+
+    color: var(--muted);
+
+    font-size: 10px;
+
+    font-weight: 750;
+
+    letter-spacing: .5px;
+}
+
+
+.stat-value {
+
+    font-size: 25px;
+
+    font-weight: 800;
+
+    margin-top: 12px;
+}
+
+
+.stat-description {
+
+    color: var(--muted);
+
+    font-size: 10px;
+
+    margin-top: 4px;
+}
+
+
+/* ============================================================
+   CARDS
+============================================================ */
+
+.grid-2 {
+
+    display: grid;
+
+    grid-template-columns:
+        1.15fr .85fr;
+
+    gap: 20px;
+}
+
+
+.card {
+
+    background: white;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 15px;
+
+    padding: 22px;
+
+    box-shadow: var(--shadow);
+
+    margin-bottom: 20px;
+}
+
+
+.card-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 20px;
+}
+
+
+.card-title {
+
+    font-size: 17px;
+
+    font-weight: 750;
+}
+
+
+.card-subtitle {
+
+    color: var(--muted);
+
+    font-size: 11px;
+
+    margin-top: 4px;
+}
+
+
+.badge {
+
+    display: inline-block;
+
+    background: #eef3ff;
+
+    color: var(--primary);
+
+    padding:
+        6px 10px;
+
+    border-radius: 7px;
+
+    font-size: 9px;
+
+    font-weight: 800;
+}
+
+
+/* ============================================================
+   SLIDER
+============================================================ */
+
+.hour-display {
+
+    display: flex;
+
+    align-items: end;
+
+    gap: 9px;
+
+    margin:
+        35px 0 22px;
+}
+
+
+.hour-number {
+
+    font-size: 66px;
+
+    line-height: .9;
+
+    color: var(--primary);
+
+    font-weight: 850;
+}
+
+
+.hour-unit {
+
+    color: var(--muted);
+
+    font-size: 13px;
+
+    padding-bottom: 7px;
+}
+
+
+input[type="range"] {
+
+    width: 100%;
+
+    height: 7px;
+
+    appearance: none;
+
+    border-radius: 20px;
+
+    outline: none;
+
+    cursor: pointer;
+
+    background:
+        linear-gradient(
+            90deg,
+            #315bea 0%,
+            #315bea var(--progress,50%),
+            #e4e9f1 var(--progress,50%),
+            #e4e9f1 100%
+        );
+}
+
+
+input[type="range"]::-webkit-slider-thumb {
+
+    appearance: none;
+
+    width: 25px;
+
+    height: 25px;
+
+    border-radius: 50%;
+
+    background: white;
+
+    border:
+        5px solid #315bea;
+
+    box-shadow:
+        0 3px 10px
+        rgba(49,91,234,.3);
+}
+
+
+.range-labels {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    color: var(--muted);
+
+    font-size: 10px;
+
+    margin-top: 10px;
+}
+
+
+.predict-button {
+
+    width: 100%;
+
+    border: 0;
+
+    padding: 14px;
+
+    border-radius: 10px;
+
+    margin-top: 24px;
+
+    color: white;
+
+    font-weight: 750;
+
+    cursor: pointer;
+
+    background:
+        linear-gradient(
+            90deg,
+            #315bea,
+            #5048e7
+        );
+
+    box-shadow:
+        0 8px 20px
+        rgba(49,91,234,.2);
+
+    transition: .2s;
+}
+
+
+.predict-button:hover {
+
+    transform:
+        translateY(-1px);
+
+    box-shadow:
+        0 12px 25px
+        rgba(49,91,234,.28);
+}
+
+
+/* ============================================================
+   RESULT
+============================================================ */
+
+.result-card {
+
+    min-height: 365px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+}
+
+
+.result-icon {
+
+    width: 68px;
+
+    height: 68px;
+
+    border-radius: 19px;
+
+    background: #edf3ff;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 29px;
+
+    margin-bottom: 16px;
+}
+
+
+.result-label {
+
+    color: var(--muted);
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.5px;
+}
+
+
+.result-value {
+
+    font-size: 57px;
+
+    font-weight: 850;
+
+    color: var(--primary);
+
+    margin:
+        11px 0;
+}
+
+
+.result-text {
+
+    color: var(--muted);
+
+    font-size: 12px;
+
+    line-height: 1.6;
+
+    max-width: 350px;
+}
+
+
+.performance {
+
+    margin-top: 17px;
+
+    padding:
+        8px 15px;
+
+    background: #ecfdf3;
+
+    color: #15803d;
+
+    border-radius: 30px;
+
+    font-size: 10px;
+
+    font-weight: 750;
+}
+
+
+.progress-container {
+
+    width: 100%;
+
+    max-width: 340px;
+
+    margin-top: 18px;
+}
+
+
+.progress-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    color: var(--muted);
+
+    font-size: 10px;
+
+    margin-bottom: 7px;
+}
+
+
+.progress {
+
+    height: 8px;
+
+    border-radius: 10px;
+
+    overflow: hidden;
+
+    background: #edf0f5;
+}
+
+
+.progress-bar {
+
+    height: 100%;
+
+    width: 0%;
+
+    background:
+        linear-gradient(
+            90deg,
+            #315bea,
+            #6047e8
+        );
+
+    transition: width .35s ease;
+}
+
+
+/* ============================================================
+   INFO ROWS
+============================================================ */
+
+.info-row {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    padding:
+        12px 0;
+
+    border-bottom:
+        1px solid #edf0f5;
+
+    font-size: 12px;
+}
+
+
+.info-row:last-child {
+
+    border-bottom: 0;
+}
+
+
+.info-key {
+
+    color: var(--muted);
+}
+
+
+.info-value {
+
+    font-weight: 700;
+
+    text-align: right;
+}
+
+
+/* ============================================================
+   TABLE
+============================================================ */
+
+.table-wrapper {
+
+    overflow-x: auto;
+}
+
+
+table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+    font-size: 12px;
+}
+
+
+th {
+
+    text-align: left;
+
+    padding: 12px;
+
+    background: #f8fafc;
+
+    color: var(--muted);
+
+    font-size: 9px;
+
+    letter-spacing: .6px;
+
+    text-transform: uppercase;
+}
+
+
+td {
+
+    padding: 13px;
+
+    border-bottom:
+        1px solid #edf0f5;
+}
+
+
+.score {
+
+    color: var(--primary);
+
+    font-weight: 800;
+}
+
+
+/* ============================================================
+   CHART
+============================================================ */
+
+.bar-chart {
+
+    height: 250px;
+
+    display: flex;
+
+    align-items: end;
+
+    gap: 10px;
+
+    padding:
+        30px 10px 0;
+}
+
+
+.bar {
+
+    flex: 1;
+
+    min-height: 5px;
+
+    border-radius:
+        6px 6px 0 0;
+
+    background:
+        linear-gradient(
+            180deg,
+            #315bea,
+            #6047e8
+        );
+
+    position: relative;
+
+    transition: height .4s;
+}
+
+
+.bar-label {
+
+    position: absolute;
+
+    top: -23px;
+
+    width: 100%;
+
+    text-align: center;
+
+    font-size: 9px;
+
+    color: var(--muted);
+}
+
+
+/* ============================================================
+   INSIGHTS
+============================================================ */
+
+.insight {
+
+    background: #f8fafc;
+
+    border-left:
+        4px solid var(--primary);
+
+    padding: 16px;
+
+    border-radius: 10px;
+
+    margin-bottom: 12px;
+}
+
+
+.insight strong {
+
+    display: block;
+
+    font-size: 13px;
+
+    margin-bottom: 5px;
+}
+
+
+.insight p {
+
+    color: var(--muted);
+
+    font-size: 11px;
+
+    line-height: 1.6;
+}
+
+
+/* ============================================================
+   ARCHITECTURE
+============================================================ */
+
+.architecture {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    flex-wrap: wrap;
+
+    gap: 10px;
+
+    padding: 25px 5px;
+}
+
+
+.architecture-box {
+
+    min-width: 120px;
+
+    text-align: center;
+
+    padding: 17px 12px;
+
+    border:
+        1px solid var(--border);
+
+    background: #f8fafc;
+
+    border-radius: 11px;
+}
+
+
+.architecture-box strong {
+
+    display: block;
+
+    font-size: 12px;
+}
+
+
+.architecture-box span {
+
+    color: var(--muted);
+
+    font-size: 9px;
+
+    display: block;
+
+    margin-top: 4px;
+}
+
+
+.arrow {
+
+    color: var(--primary);
+
+    font-weight: 800;
+
+    font-size: 18px;
+}
+
+
+/* ============================================================
+   MOBILE
+============================================================ */
+
+@media(max-width:1050px) {
+
+    .sidebar {
+
+        width: 220px;
+    }
+
+    .main {
+
+        margin-left: 220px;
+    }
+
+    .stats {
+
+        grid-template-columns:
+            repeat(2,1fr);
+    }
+
+    .grid-2 {
+
+        grid-template-columns: 1fr;
+    }
+}
+
+
+@media(max-width:700px) {
+
+    .sidebar {
+
+        position: relative;
+
+        width: 100%;
+
+        height: auto;
+    }
+
+    .sidebar-status {
+
+        display: none;
+    }
+
+    .main {
+
+        margin-left: 0;
+    }
+
+    .topbar {
+
+        padding:
+            0 18px;
+    }
+
+    .content {
+
+        padding: 18px;
+    }
+
+    .stats {
+
+        grid-template-columns: 1fr;
+    }
+}
+
+</style>
 
 </head>
 
 
 <body>
 
-    <!-- Decorative background -->
-    <div class="background-circle circle-one"></div>
-    <div class="background-circle circle-two"></div>
+
+<!-- =========================================================
+     SIDEBAR
+========================================================= -->
+
+<aside class="sidebar">
 
 
-    <div class="container">
+    <div class="brand">
 
-        <!-- ======================================
-             COLLEGE BANNER
-        ======================================= -->
-
-        <div class="banner-wrapper">
-
-            <img
-                src="{{ url_for('static', filename='images/college_banner2.png') }}"
-                alt="Oxstandhard University"
-            >
-
+        <div class="brand-logo">
+            AI
         </div>
 
+        <div>
 
-        <!-- ======================================
-             HERO
-        ======================================= -->
-
-        <section class="hero">
-
-            <h1>Student Mark Predictor</h1>
-
-            <p>
-                Predict your expected academic performance
-                using our Machine Learning powered prediction system.
-            </p>
-
-        </section>
-
-
-        <!-- ======================================
-             PREDICTION CARD
-        ======================================= -->
-
-        <div class="prediction-card">
-
-            <div class="card-header">
-
-                <div class="card-icon">
-                    🎓
-                </div>
-
-                <h2>Predict Your Marks</h2>
-
-                <p>
-                    Enter your average daily study hours
-                    to generate a predicted score.
-                </p>
-
+            <div class="brand-title">
+                MarkPredict
             </div>
 
-
-            <!-- IMPORTANT:
-                 Same Flask endpoint and same input name.
-                 Backend does NOT need to change.
-            -->
-
-            <form
-                action="{{ url_for('predict') }}"
-                method="post"
-                id="predictionForm"
-            >
-
-                <div class="form-group">
-
-                    <label for="study_hours">
-                        📚 Daily Study Hours
-                    </label>
-
-                    <div class="input-wrapper">
-
-                        <span class="input-icon">
-                            ⏱️
-                        </span>
-
-                        <input
-                            type="number"
-                            id="study_hours"
-                            name="study_hours"
-                            placeholder="Enter study hours"
-                            min="0"
-                            max="24"
-                            step="0.1"
-                            required
-                        >
-
-                    </div>
-
-
-                    <div class="input-info">
-
-                        <span>Minimum: 0 hours</span>
-
-                        <span>Maximum: 24 hours</span>
-
-                    </div>
-
-                </div>
-
-
-                <button
-                    type="submit"
-                    class="predict-button"
-                    id="predictButton"
-                >
-
-                    <span id="buttonText">
-                        🔮 Predict My Marks
-                    </span>
-
-                </button>
-
-            </form>
-
-
-            <!-- ======================================
-                 PREDICTION RESULT
-            ======================================= -->
-
-            {% if prediction_text %}
-
-            <div class="result-container">
-
-                <div class="result-card">
-
-                    <div class="result-icon">
-                        🎯
-                    </div>
-
-                    <div class="result-title">
-                        Prediction Result
-                    </div>
-
-                    <div class="result-text">
-                        {{ prediction_text }}
-                    </div>
-
-                </div>
-
-            </div>
-
-            {% endif %}
-
-        </div>
-
-
-        <!-- ======================================
-             FEATURES
-        ======================================= -->
-
-        <div class="features">
-
-            <div class="feature-card">
-
-                <div class="feature-icon">
-                    🤖
-                </div>
-
-                <h3>Machine Learning</h3>
-
-                <p>
-                    Predictions are generated using
-                    a trained Machine Learning model.
-                </p>
-
-            </div>
-
-
-            <div class="feature-card">
-
-                <div class="feature-icon">
-                    ⚡
-                </div>
-
-                <h3>Instant Prediction</h3>
-
-                <p>
-                    Enter your study hours and
-                    receive your prediction instantly.
-                </p>
-
-            </div>
-
-
-            <div class="feature-card">
-
-                <div class="feature-icon">
-                    📊
-                </div>
-
-                <h3>Academic Insights</h3>
-
-                <p>
-                    Understand how your study time
-                    relates to expected performance.
-                </p>
-
+            <div class="brand-subtitle">
+                Student AI Analytics
             </div>
 
         </div>
-
 
     </div>
 
 
-    <!-- ======================================
-         FOOTER
-    ======================================= -->
-
-    <footer>
-
-        <p>
-            © 2026 Oxstandhard University
-            | Student Mark Predictor
-        </p>
-
-        <p style="margin-top: 6px;">
-            Machine Learning Academic Project
-        </p>
-
-    </footer>
+    <div class="section-title">
+        NAVIGATION
+    </div>
 
 
-    <!-- ======================================
-         JAVASCRIPT
-    ======================================= -->
-
-    <script>
-
-        const form = document.getElementById("predictionForm");
-
-        const button = document.getElementById("predictButton");
-
-        const buttonText = document.getElementById("buttonText");
-
-        const studyHours = document.getElementById("study_hours");
+    <nav class="nav">
 
 
-        form.addEventListener("submit", function(event) {
+        <div
+            class="nav-item active"
+            data-page="dashboard"
+        >
 
-            const hours = parseFloat(studyHours.value);
+            <span class="nav-icon">
+                ⌂
+            </span>
+
+            Dashboard
+
+        </div>
 
 
-            /* Frontend validation */
+        <div
+            class="nav-item"
+            data-page="predictor"
+        >
 
-            if (hours < 0 || hours > 24) {
+            <span class="nav-icon">
+                ◉
+            </span>
 
-                event.preventDefault();
+            Mark Predictor
 
-                alert(
-                    "Please enter study hours between 0 and 24."
+        </div>
+
+
+        <div
+            class="nav-item"
+            data-page="analytics"
+        >
+
+            <span class="nav-icon">
+                ▥
+            </span>
+
+            Analytics
+
+        </div>
+
+
+        <div
+            class="nav-item"
+            data-page="history"
+        >
+
+            <span class="nav-icon">
+                ◫
+            </span>
+
+            Prediction History
+
+        </div>
+
+
+        <div
+            class="nav-item"
+            data-page="model"
+        >
+
+            <span class="nav-icon">
+                ◇
+            </span>
+
+            ML Model
+
+        </div>
+
+
+        <div
+            class="nav-item"
+            data-page="insights"
+        >
+
+            <span class="nav-icon">
+                ✦
+            </span>
+
+            Performance Insights
+
+        </div>
+
+
+        <div
+            class="nav-item"
+            data-page="about"
+        >
+
+            <span class="nav-icon">
+                ⓘ
+            </span>
+
+            About Project
+
+        </div>
+
+    </nav>
+
+
+    <div class="sidebar-status">
+
+        <div class="status-title">
+
+            <span class="online"></span>
+
+            ML Model Online
+
+        </div>
+
+        <div class="status-text">
+
+            Prediction engine is ready.
+            Flask API is operational.
+
+        </div>
+
+    </div>
+
+</aside>
+
+
+
+<!-- =========================================================
+     MAIN
+========================================================= -->
+
+<main class="main">
+
+
+    <header class="topbar">
+
+        <div class="breadcrumb">
+
+            Dashboard
+
+            &nbsp;/&nbsp;
+
+            <strong id="breadcrumb">
+                Overview
+            </strong>
+
+        </div>
+
+
+        <div class="top-right">
+
+            <div class="system-status">
+
+                ● System Online
+
+            </div>
+
+            <div class="avatar">
+                SP
+            </div>
+
+        </div>
+
+    </header>
+
+
+
+    <section class="content">
+
+
+        <!-- =================================================
+             DASHBOARD
+        ================================================= -->
+
+        <div
+            class="page active"
+            id="dashboard"
+        >
+
+            <div class="page-header">
+
+                <h1>
+                    Student Mark Predictor
+                </h1>
+
+                <p>
+                    AI-powered academic performance
+                    prediction and analytics dashboard.
+                </p>
+
+            </div>
+
+
+            <div class="stats">
+
+
+                <div class="stat-card">
+
+                    <div class="stat-label">
+                        ML ENGINE
+                    </div>
+
+                    <div class="stat-value">
+                        Active
+                    </div>
+
+                    <div class="stat-description">
+                        Prediction engine operational
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-label">
+                        MAXIMUM SCORE
+                    </div>
+
+                    <div class="stat-value">
+                        100%
+                    </div>
+
+                    <div class="stat-description">
+                        Maximum prediction
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-label">
+                        STUDY RANGE
+                    </div>
+
+                    <div class="stat-value">
+                        0–24
+                    </div>
+
+                    <div class="stat-description">
+                        Hours per day
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-label">
+                        PREDICTIONS
+                    </div>
+
+                    <div
+                        class="stat-value"
+                        id="predictionCount"
+                    >
+                        0
+                    </div>
+
+                    <div class="stat-description">
+                        Saved records
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="grid-2">
+
+
+                <div class="card">
+
+                    <div class="card-header">
+
+                        <div>
+
+                            <div class="card-title">
+                                Interactive Prediction
+                            </div>
+
+                            <div class="card-subtitle">
+                                Move the slider to evaluate
+                                academic performance.
+                            </div>
+
+                        </div>
+
+                        <span class="badge">
+                            LIVE ML
+                        </span>
+
+                    </div>
+
+
+                    <div class="hour-display">
+
+                        <div
+                            class="hour-number"
+                            id="hourNumber"
+                        >
+                            12
+                        </div>
+
+                        <div class="hour-unit">
+                            hours / day
+                        </div>
+
+                    </div>
+
+
+                    <input
+                        type="range"
+                        id="studySlider"
+                        min="0"
+                        max="24"
+                        step="0.5"
+                        value="12"
+                    >
+
+
+                    <div class="range-labels">
+
+                        <span>
+                            0 Hours
+                        </span>
+
+                        <span>
+                            12 Hours
+                        </span>
+
+                        <span>
+                            24 Hours
+                        </span>
+
+                    </div>
+
+
+                    <button
+                        class="predict-button"
+                        id="predictButton"
+                    >
+
+                        Save Prediction
+
+                    </button>
+
+                </div>
+
+
+
+                <div class="card result-card">
+
+                    <div class="result-icon">
+                        🎓
+                    </div>
+
+                    <div class="result-label">
+                        PREDICTED PERFORMANCE
+                    </div>
+
+                    <div
+                        class="result-value"
+                        id="resultValue"
+                    >
+                        --
+                    </div>
+
+                    <div
+                        class="result-text"
+                        id="resultText"
+                    >
+                        Move the slider to calculate
+                        your expected marks.
+                    </div>
+
+                    <div
+                        class="performance"
+                        id="performance"
+                    >
+                        Awaiting Input
+                    </div>
+
+
+                    <div class="progress-container">
+
+                        <div class="progress-header">
+
+                            <span>
+                                Performance
+                            </span>
+
+                            <span
+                                id="progressText"
+                            >
+                                0%
+                            </span>
+
+                        </div>
+
+                        <div class="progress">
+
+                            <div
+                                class="progress-bar"
+                                id="progressBar"
+                            ></div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             PREDICTOR
+        ================================================= -->
+
+        <div
+            class="page"
+            id="predictor"
+        >
+
+            <div class="page-header">
+
+                <h1>
+                    Mark Predictor
+                </h1>
+
+                <p>
+                    Dedicated machine learning prediction
+                    interface.
+                </p>
+
+            </div>
+
+
+            <div class="grid-2">
+
+
+                <div class="card">
+
+                    <div class="card-header">
+
+                        <div>
+
+                            <div class="card-title">
+                                Daily Study Duration
+                            </div>
+
+                            <div class="card-subtitle">
+                                Select 0–24 hours.
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="hour-display">
+
+                        <div
+                            class="hour-number"
+                            id="predictorHours"
+                        >
+                            12
+                        </div>
+
+                        <div class="hour-unit">
+                            hours
+                        </div>
+
+                    </div>
+
+
+                    <input
+                        type="range"
+                        id="predictorSlider"
+                        min="0"
+                        max="24"
+                        step="0.5"
+                        value="12"
+                    >
+
+                </div>
+
+
+
+                <div class="card result-card">
+
+                    <div class="result-icon">
+                        📊
+                    </div>
+
+                    <div class="result-label">
+                        EXPECTED MARKS
+                    </div>
+
+                    <div
+                        class="result-value"
+                        id="predictorResult"
+                    >
+                        --
+                    </div>
+
+                    <div
+                        class="result-text"
+                        id="predictorMessage"
+                    >
+                        Select study duration.
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             ANALYTICS
+        ================================================= -->
+
+        <div
+            class="page"
+            id="analytics"
+        >
+
+            <div class="page-header">
+
+                <h1>
+                    Analytics
+                </h1>
+
+                <p>
+                    Prediction statistics and trends.
+                </p>
+
+            </div>
+
+
+            <div class="stats">
+
+
+                <div class="stat-card">
+
+                    <div class="stat-label">
+                        AVERAGE
+                    </div>
+
+                    <div
+                        class="stat-value"
+                        id="averageScore"
+                    >
+                        --
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-label">
+                        HIGHEST
+                    </div>
+
+                    <div
+                        class="stat-value"
+                        id="highestScore"
+                    >
+                        --
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-label">
+                        LOWEST
+                    </div>
+
+                    <div
+                        class="stat-value"
+                        id="lowestScore"
+                    >
+                        --
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-label">
+                        BEST STUDY HOURS
+                    </div>
+
+                    <div
+                        class="stat-value"
+                        id="bestHours"
+                    >
+                        --
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <div class="card-title">
+                            Prediction Distribution
+                        </div>
+
+                        <div class="card-subtitle">
+                            Recent saved predictions.
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="bar-chart"
+                    id="barChart"
+                ></div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             HISTORY
+        ================================================= -->
+
+        <div
+            class="page"
+            id="history"
+        >
+
+            <div class="page-header">
+
+                <h1>
+                    Prediction History
+                </h1>
+
+                <p>
+                    Stored student prediction records.
+                </p>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    #
+                                </th>
+
+                                <th>
+                                    Study Hours
+                                </th>
+
+                                <th>
+                                    Predicted Marks
+                                </th>
+
+                                <th>
+                                    Status
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody
+                            id="historyBody"
+                        >
+
+                            <tr>
+
+                                <td colspan="4">
+                                    Loading...
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             ML MODEL
+        ================================================= -->
+
+        <div
+            class="page"
+            id="model"
+        >
+
+            <div class="page-header">
+
+                <h1>
+                    Machine Learning Model
+                </h1>
+
+                <p>
+                    Model configuration and application
+                    architecture.
+                </p>
+
+            </div>
+
+
+            <div class="grid-2">
+
+
+                <div class="card">
+
+                    <div class="card-title">
+                        Model Configuration
+                    </div>
+
+
+                    <div class="info-row">
+
+                        <span class="info-key">
+                            Model
+                        </span>
+
+                        <span class="info-value">
+                            student_mark_predictor.pkl
+                        </span>
+
+                    </div>
+
+
+                    <div class="info-row">
+
+                        <span class="info-key">
+                            Framework
+                        </span>
+
+                        <span class="info-value">
+                            Flask
+                        </span>
+
+                    </div>
+
+
+                    <div class="info-row">
+
+                        <span class="info-key">
+                            Numerical Processing
+                        </span>
+
+                        <span class="info-value">
+                            NumPy
+                        </span>
+
+                    </div>
+
+
+                    <div class="info-row">
+
+                        <span class="info-key">
+                            Data Analytics
+                        </span>
+
+                        <span class="info-value">
+                            Pandas
+                        </span>
+
+                    </div>
+
+
+                    <div class="info-row">
+
+                        <span class="info-key">
+                            Model Loader
+                        </span>
+
+                        <span class="info-value">
+                            Joblib
+                        </span>
+
+                    </div>
+
+
+                    <div class="info-row">
+
+                        <span class="info-key">
+                            Input
+                        </span>
+
+                        <span class="info-value">
+                            Study Hours
+                        </span>
+
+                    </div>
+
+
+                    <div class="info-row">
+
+                        <span class="info-key">
+                            Input Range
+                        </span>
+
+                        <span class="info-value">
+                            0–24 Hours
+                        </span>
+
+                    </div>
+
+
+                    <div class="info-row">
+
+                        <span class="info-key">
+                            Output
+                        </span>
+
+                        <span class="info-value">
+                            0–100%
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="card">
+
+                    <div class="card-title">
+                        Application Pipeline
+                    </div>
+
+
+                    <div class="architecture">
+
+
+                        <div class="architecture-box">
+
+                            <strong>
+                                Student
+                            </strong>
+
+                            <span>
+                                Study Hours
+                            </span>
+
+                        </div>
+
+
+                        <div class="arrow">
+                            →
+                        </div>
+
+
+                        <div class="architecture-box">
+
+                            <strong>
+                                Web UI
+                            </strong>
+
+                            <span>
+                                HTML / CSS / JS
+                            </span>
+
+                        </div>
+
+
+                        <div class="arrow">
+                            →
+                        </div>
+
+
+                        <div class="architecture-box">
+
+                            <strong>
+                                Flask
+                            </strong>
+
+                            <span>
+                                REST API
+                            </span>
+
+                        </div>
+
+
+                        <div class="arrow">
+                            →
+                        </div>
+
+
+                        <div class="architecture-box">
+
+                            <strong>
+                                ML Model
+                            </strong>
+
+                            <span>
+                                PKL
+                            </span>
+
+                        </div>
+
+
+                        <div class="arrow">
+                            →
+                        </div>
+
+
+                        <div class="architecture-box">
+
+                            <strong>
+                                CSV
+                            </strong>
+
+                            <span>
+                                Analytics
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             INSIGHTS
+        ================================================= -->
+
+        <div
+            class="page"
+            id="insights"
+        >
+
+            <div class="page-header">
+
+                <h1>
+                    Performance Insights
+                </h1>
+
+                <p>
+                    Interpretation of prediction results.
+                </p>
+
+            </div>
+
+
+            <div class="card">
+
+
+                <div class="insight">
+
+                    <strong>
+                        📚 Study Consistency
+                    </strong>
+
+                    <p>
+                        Regular study sessions can help
+                        students maintain consistent
+                        academic preparation.
+                    </p>
+
+                </div>
+
+
+                <div class="insight">
+
+                    <strong>
+                        ⏱️ Study Duration
+                    </strong>
+
+                    <p>
+                        Use the slider to explore how
+                        different daily study durations
+                        affect the model's predicted score.
+                    </p>
+
+                </div>
+
+
+                <div class="insight">
+
+                    <strong>
+                        🤖 Machine Learning
+                    </strong>
+
+                    <p>
+                        The application uses your trained
+                        student-mark prediction model to
+                        generate the prediction.
+                    </p>
+
+                </div>
+
+
+                <div class="insight">
+
+                    <strong>
+                        📊 Data Analytics
+                    </strong>
+
+                    <p>
+                        Saved predictions can be analyzed
+                        through the history and analytics
+                        sections.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             ABOUT
+        ================================================= -->
+
+        <div
+            class="page"
+            id="about"
+        >
+
+            <div class="page-header">
+
+                <h1>
+                    About Project
+                </h1>
+
+                <p>
+                    Student Mark Predictor — AI-powered
+                    academic analytics platform.
+                </p>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-title">
+                    Project Overview
+                </div>
+
+
+                <p
+                    style="
+                    margin-top:15px;
+                    color:#667085;
+                    font-size:13px;
+                    line-height:1.8;
+                    "
+                >
+
+                    Student Mark Predictor is a machine
+                    learning web application that predicts
+                    expected academic performance based on
+                    daily study duration.
+
+                    The system combines a Flask backend,
+                    trained machine learning model,
+                    NumPy numerical processing,
+                    Pandas data management, and an
+                    interactive frontend dashboard.
+
+                </p>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-title">
+                    Technology Stack
+                </div>
+
+
+                <div class="stats"
+                    style="margin-top:20px;">
+
+                    <div class="stat-card">
+
+                        <div class="stat-label">
+                            WEB BACKEND
+                        </div>
+
+                        <div class="stat-value">
+                            Flask
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-label">
+                            MACHINE LEARNING
+                        </div>
+
+                        <div class="stat-value">
+                            Joblib
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-label">
+                            DATA
+                        </div>
+
+                        <div class="stat-value">
+                            Pandas
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-label">
+                            NUMERICAL
+                        </div>
+
+                        <div class="stat-value">
+                            NumPy
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+</main>
+
+
+
+<script>
+
+/* ============================================================
+   NAVIGATION
+============================================================ */
+
+const navItems =
+    document.querySelectorAll(
+        ".nav-item"
+    );
+
+
+const pages =
+    document.querySelectorAll(
+        ".page"
+    );
+
+
+const breadcrumb =
+    document.getElementById(
+        "breadcrumb"
+    );
+
+
+navItems.forEach(
+    item => {
+
+        item.addEventListener(
+            "click",
+            () => {
+
+                const page =
+                    item.dataset.page;
+
+
+                navItems.forEach(
+                    nav => {
+
+                        nav.classList.remove(
+                            "active"
+                        );
+
+                    }
                 );
 
-                return;
+
+                item.classList.add(
+                    "active"
+                );
+
+
+                pages.forEach(
+                    p => {
+
+                        p.classList.remove(
+                            "active"
+                        );
+
+                    }
+                );
+
+
+                document
+                    .getElementById(page)
+                    .classList.add(
+                        "active"
+                    );
+
+
+                breadcrumb.textContent =
+                    item.textContent.trim();
+
+
+                if (
+                    page === "history"
+                    ||
+                    page === "analytics"
+                ) {
+
+                    loadHistory();
+
+                }
+
+            }
+        );
+
+    }
+);
+
+
+/* ============================================================
+   SLIDER
+============================================================ */
+
+const slider =
+    document.getElementById(
+        "studySlider"
+    );
+
+
+const hourNumber =
+    document.getElementById(
+        "hourNumber"
+    );
+
+
+const resultValue =
+    document.getElementById(
+        "resultValue"
+    );
+
+
+const resultText =
+    document.getElementById(
+        "resultText"
+    );
+
+
+const performance =
+    document.getElementById(
+        "performance"
+    );
+
+
+const progressBar =
+    document.getElementById(
+        "progressBar"
+    );
+
+
+const progressText =
+    document.getElementById(
+        "progressText"
+    );
+
+
+const predictButton =
+    document.getElementById(
+        "predictButton"
+    );
+
+
+/* ============================================================
+   SLIDER VISUAL
+============================================================ */
+
+function updateSlider(
+    element
+) {
+
+    const value =
+        parseFloat(
+            element.value
+        );
+
+
+    const min =
+        parseFloat(
+            element.min
+        );
+
+
+    const max =
+        parseFloat(
+            element.max
+        );
+
+
+    const percentage =
+        (
+            (value - min)
+            /
+            (max - min)
+        ) * 100;
+
+
+    element.style.setProperty(
+        "--progress",
+        percentage + "%"
+    );
+}
+
+
+/* ============================================================
+   GET PREDICTION
+============================================================ */
+
+async function getPrediction(
+    hours
+) {
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/predict",
+                {
+
+                    method: "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json"
+
+                    },
+
+                    body:
+                        JSON.stringify(
+                            {
+                                study_hours:
+                                    parseFloat(
+                                        hours
+                                    )
+                            }
+                        )
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                data.error
+                ||
+                "Prediction failed"
+            );
+
+        }
+
+
+        return data;
+
+    }
+    catch(error) {
+
+        console.error(
+            error
+        );
+
+        return null;
+
+    }
+
+}
+
+
+/* ============================================================
+   DISPLAY PREDICTION
+============================================================ */
+
+async function displayPrediction(
+    hours
+) {
+
+    hourNumber.textContent =
+        Number(hours)
+            .toFixed(
+                Number(hours) % 1 === 0
+                    ? 0
+                    : 1
+            );
+
+
+    resultValue.textContent =
+        "...";
+
+
+    performance.textContent =
+        "Calculating";
+
+
+    const data =
+        await getPrediction(
+            hours
+        );
+
+
+    if (!data) {
+
+        resultValue.textContent =
+            "--";
+
+        performance.textContent =
+            "Prediction Error";
+
+        return;
+
+    }
+
+
+    const score =
+        Number(
+            data.prediction
+        );
+
+
+    resultValue.textContent =
+        score.toFixed(2)
+        + "%";
+
+
+    resultText.textContent =
+        "Expected academic performance "
+        +
+        "for "
+        +
+        hours
+        +
+        " hours of daily study.";
+
+
+    progressBar.style.width =
+        score + "%";
+
+
+    progressText.textContent =
+        score.toFixed(2)
+        + "%";
+
+
+    if (score >= 90) {
+
+        performance.textContent =
+            "Excellent Performance";
+
+    }
+    else if (score >= 75) {
+
+        performance.textContent =
+            "Strong Performance";
+
+    }
+    else if (score >= 60) {
+
+        performance.textContent =
+            "Good Performance";
+
+    }
+    else if (score >= 40) {
+
+        performance.textContent =
+            "Moderate Performance";
+
+    }
+    else {
+
+        performance.textContent =
+            "Needs Improvement";
+
+    }
+
+}
+
+
+/* ============================================================
+   SLIDER EVENT
+============================================================ */
+
+slider.addEventListener(
+    "input",
+    () => {
+
+        updateSlider(
+            slider
+        );
+
+
+        displayPrediction(
+            slider.value
+        );
+
+    }
+);
+
+
+/* ============================================================
+   SAVE PREDICTION
+============================================================ */
+
+predictButton.addEventListener(
+    "click",
+    async () => {
+
+        const hours =
+            parseFloat(
+                slider.value
+            );
+
+
+        try {
+
+            const response =
+                await fetch(
+                    "/api/save",
+                    {
+
+                        method: "POST",
+
+                        headers: {
+
+                            "Content-Type":
+                                "application/json"
+
+                        },
+
+                        body:
+                            JSON.stringify(
+                                {
+                                    study_hours:
+                                        hours
+                                }
+                            )
+
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    data.error
+                );
 
             }
 
 
-            /* Loading state */
-
-            button.classList.add("loading");
-
-            buttonText.innerHTML =
-                "⏳ Calculating Prediction...";
-
-        });
+            predictButton.textContent =
+                "✓ Prediction Saved";
 
 
-        /* Enter key / input feedback */
+            setTimeout(
+                () => {
 
-        studyHours.addEventListener("input", function() {
+                    predictButton.textContent =
+                        "Save Prediction";
 
-            const value = parseFloat(this.value);
+                },
+                1500
+            );
 
-            if (value > 24) {
 
-                this.value = 24;
+            loadHistory();
 
-            }
+        }
+        catch(error) {
 
-            if (value < 0) {
+            console.error(
+                error
+            );
 
-                this.value = 0;
+        }
 
-            }
+    }
+);
 
-        });
 
-    </script>
+/* ============================================================
+   SECOND PREDICTOR
+============================================================ */
+
+const predictorSlider =
+    document.getElementById(
+        "predictorSlider"
+    );
+
+
+const predictorHours =
+    document.getElementById(
+        "predictorHours"
+    );
+
+
+const predictorResult =
+    document.getElementById(
+        "predictorResult"
+    );
+
+
+const predictorMessage =
+    document.getElementById(
+        "predictorMessage"
+    );
+
+
+predictorSlider.addEventListener(
+    "input",
+    async () => {
+
+        updateSlider(
+            predictorSlider
+        );
+
+
+        const hours =
+            predictorSlider.value;
+
+
+        predictorHours.textContent =
+            hours;
+
+
+        const data =
+            await getPrediction(
+                hours
+            );
+
+
+        if (!data) {
+
+            predictorResult.textContent =
+                "--";
+
+            return;
+
+        }
+
+
+        predictorResult.textContent =
+            Number(
+                data.prediction
+            ).toFixed(2)
+            +
+            "%";
+
+
+        predictorMessage.textContent =
+            "The ML model estimates "
+            +
+            Number(
+                data.prediction
+            ).toFixed(2)
+            +
+            "% for "
+            +
+            hours
+            +
+            " hours of daily study.";
+
+    }
+);
+
+
+/* ============================================================
+   LOAD HISTORY
+============================================================ */
+
+async function loadHistory() {
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/history"
+            );
+
+
+        const data =
+            await response.json();
+
+
+        const history =
+            data.history
+            ||
+            [];
+
+
+        document.getElementById(
+            "predictionCount"
+        ).textContent =
+            history.length;
+
+
+        const body =
+            document.getElementById(
+                "historyBody"
+            );
+
+
+        if (
+            history.length === 0
+        ) {
+
+            body.innerHTML = `
+
+                <tr>
+
+                    <td colspan="4">
+
+                        No prediction records yet.
+
+                    </td>
+
+                </tr>
+
+            `;
+
+            return;
+
+        }
+
+
+        body.innerHTML =
+            history
+                .slice()
+                .reverse()
+                .map(
+                    (
+                        item,
+                        index
+                    ) => `
+
+                    <tr>
+
+                        <td>
+                            ${index + 1}
+                        </td>
+
+                        <td>
+
+                            ${Number(
+                                item[
+                                    "Study Hours"
+                                ]
+                            ).toFixed(1)}
+
+                            hours
+
+                        </td>
+
+                        <td class="score">
+
+                            ${Number(
+                                item[
+                                    "Predicted Output"
+                                ]
+                            ).toFixed(2)}%
+
+                        </td>
+
+                        <td>
+
+                            <span class="badge">
+
+                                Saved
+
+                            </span>
+
+                        </td>
+
+                    </tr>
+
+                `
+                )
+                .join("");
+
+
+        updateAnalytics(
+            history
+        );
+
+    }
+    catch(error) {
+
+        console.error(
+            "History error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* ============================================================
+   ANALYTICS
+============================================================ */
+
+function updateAnalytics(
+    history
+) {
+
+    if (
+        history.length === 0
+    ) {
+
+        return;
+
+    }
+
+
+    const scores =
+        history.map(
+            item =>
+                Number(
+                    item[
+                        "Predicted Output"
+                    ]
+                )
+        );
+
+
+    const average =
+        scores.reduce(
+            (
+                total,
+                score
+            ) =>
+                total + score,
+            0
+        )
+        /
+        scores.length;
+
+
+    const highest =
+        Math.max(
+            ...scores
+        );
+
+
+    const lowest =
+        Math.min(
+            ...scores
+        );
+
+
+    document.getElementById(
+        "averageScore"
+    ).textContent =
+        average.toFixed(2)
+        + "%";
+
+
+    document.getElementById(
+        "highestScore"
+    ).textContent =
+        highest.toFixed(2)
+        + "%";
+
+
+    document.getElementById(
+        "lowestScore"
+    ).textContent =
+        lowest.toFixed(2)
+        + "%";
+
+
+    const bestIndex =
+        scores.indexOf(
+            highest
+        );
+
+
+    if (
+        bestIndex >= 0
+    ) {
+
+        document.getElementById(
+            "bestHours"
+        ).textContent =
+            Number(
+                history[
+                    bestIndex
+                ][
+                    "Study Hours"
+                ]
+            ).toFixed(1)
+            +
+            "h";
+
+    }
+
+
+    const chart =
+        document.getElementById(
+            "barChart"
+        );
+
+
+    const recent =
+        history.slice(
+            -10
+        );
+
+
+    chart.innerHTML =
+        recent
+            .map(
+                item => {
+
+                    const score =
+                        Number(
+                            item[
+                                "Predicted Output"
+                            ]
+                        );
+
+
+                    return `
+
+                        <div
+                            class="bar"
+                            style="
+                            height:
+                            ${Math.max(
+                                score,
+                                5
+                            )}%;
+                            "
+                        >
+
+                            <div
+                                class="bar-label"
+                            >
+
+                                ${score.toFixed(0)}%
+
+                            </div>
+
+                        </div>
+
+                    `;
+
+                }
+            )
+            .join("");
+
+}
+
+
+/* ============================================================
+   INITIALIZATION
+============================================================ */
+
+updateSlider(
+    slider
+);
+
+
+updateSlider(
+    predictorSlider
+);
+
+
+loadHistory();
+
+
+displayPrediction(
+    slider.value
+);
+
+
+</script>
+
 
 </body>
 
